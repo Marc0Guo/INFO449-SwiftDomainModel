@@ -67,9 +67,29 @@ class FamilyTests : XCTestCase {
         let familyIncome = family.householdIncome()
         XCTAssert(familyIncome == 12000)
     }
+    
+    // Extra
+
+    func testFirstName() {
+        let person = Person(firstName: "A", age: 40)
+        XCTAssertEqual(person.firstName, "A")
+        XCTAssertEqual(person.lastName, "")
+    }
+
+    func testLastName() {
+        let person = Person(lastName: "B", age: 60)
+        XCTAssertEqual(person.firstName, "")
+        XCTAssertEqual(person.lastName, "B")
+    }
+
+
   
     static var allTests = [
         ("testFamily", testFamily),
         ("testFamilyWithKids", testFamilyWithKids),
+        
+        // Extra
+        ("testFirstName", testFirstName),
+        ("testLastName", testLastName),
     ]
 }

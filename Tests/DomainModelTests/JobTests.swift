@@ -37,11 +37,53 @@ class JobTests: XCTestCase {
         job.raise(byPercent: 1.0) // Nice raise, bruh
         XCTAssert(job.calculateIncome(10) == 320)
     }
+    
+    // Extra test
+    func testConvertNothing() {
+        let job = Job(title: "test1", type: .Salary(10000))
+        job.convert()
+        
+        switch job.type {
+        case .Salary(let salary):
+            XCTAssertEqual(salary, 10000)
+        default:
+            XCTFail("Job should remain a Salary type")
+        }
+    }
+    func testConvertExact() {
+        let job = Job(title: "test2", type: .Hourly(20.0))
+        job.convert()
+        
+        switch job.type {
+        case .Salary(let salary):
+            XCTAssertEqual(salary, 40000)
+        default:
+            XCTFail("Expected job type to be Salary")
+        }
+    }
+    
+    func testConvertRound(){
+        let job = Job(title: "test3", type: Job.JobType.Hourly(21.75))
+        job.convert()
+        
+        switch job.type {
+        case .Salary(let salary):
+            XCTAssertEqual(salary, 44000)
+        default:
+            XCTFail("Expected Salary job type after conversion")
+        }
+        // 43500 -> 44000
+    }
   
     static var allTests = [
         ("testCreateSalaryJob", testCreateSalaryJob),
         ("testCreateHourlyJob", testCreateHourlyJob),
         ("testSalariedRaise", testSalariedRaise),
         ("testHourlyRaise", testHourlyRaise),
+        
+        // Extra
+        ("testConvertNothing", testConvertNothing),
+        ("testConvertExact", testConvertExact),
+        ("testConvertRound", testConvertRound),
     ]
 }

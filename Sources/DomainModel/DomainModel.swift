@@ -100,6 +100,18 @@ public class Job {
             type = .Salary(UInt(increased))
         }
     }
+    
+    // Extra
+    public func convert() {
+        switch type {
+        case .Hourly(let rate):
+            let estimatedSalary = Int(rate * 2000)
+            let roundedUp = ((estimatedSalary + 999) / 1000) * 1000
+            type = .Salary(UInt(roundedUp))
+        case .Salary:
+            break
+        }
+    }
 }
 
 ////////////////////////////////////
@@ -134,7 +146,9 @@ public class Person {
         }
     }
 
-    public init(firstName: String, lastName: String, age: Int) {
+    public init(firstName: String = "", lastName: String = "", age: Int) {
+        precondition(!firstName.isEmpty || !lastName.isEmpty, "Person must have at least a first or last name")
+        
         self.firstName = firstName
         self.lastName = lastName
         self.age = age
@@ -149,8 +163,9 @@ public class Person {
         } ?? "nil"
 
         let spouseDesc = spouse?.firstName ?? "nil"
+        let fullName = [firstName, lastName].filter { !$0.isEmpty }.joined(separator: " ")
 
-        return "[Person: firstName:\(firstName) lastName:\(lastName) age:\(age) job:\(jobDesc) spouse:\(spouseDesc)]"
+        return "[Person: name:\(fullName) age:\(age) job:\(jobDesc) spouse:\(spouseDesc)]"
     }
 }
 
