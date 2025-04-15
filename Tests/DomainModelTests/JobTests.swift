@@ -74,6 +74,32 @@ class JobTests: XCTestCase {
         }
         // 43500 -> 44000
     }
+    
+    func testRaiseByZeroAmount() {
+        let job = Job(title: "Intern", type: .Hourly(18.0))
+        job.raise(byAmount: 0.0)
+        XCTAssertEqual(job.calculateIncome(1), 18)
+    }
+
+    func testRaiseByZeroPercent() {
+        let job = Job(title: "Engineer", type: .Salary(60000))
+        job.raise(byPercent: 0.0)
+        XCTAssertEqual(job.calculateIncome(40), 60000)
+    }
+
+    func testRaiseByNegativeAmount() {
+        let job = Job(title: "Developer", type: .Hourly(30.0))
+        job.raise(byAmount: -5.0)
+        XCTAssertEqual(job.calculateIncome(2), 50) // 25 * 2
+    }
+
+    func testRaiseByNegativePercent() {
+        let job = Job(title: "Manager", type: .Salary(80000))
+        job.raise(byPercent: -0.25)
+        XCTAssertEqual(job.calculateIncome(1), 60000) // 80000 * 0.75
+    }
+    
+    
   
     static var allTests = [
         ("testCreateSalaryJob", testCreateSalaryJob),
@@ -85,5 +111,9 @@ class JobTests: XCTestCase {
         ("testConvertNothing", testConvertNothing),
         ("testConvertExact", testConvertExact),
         ("testConvertRound", testConvertRound),
+        ("testRaiseByZeroAmount", testRaiseByZeroAmount),
+        ("testRaiseByZeroPercent", testRaiseByZeroPercent),
+        ("testRaiseByNegativeAmount", testRaiseByNegativeAmount),
+        ("testRaiseByNegativePercent", testRaiseByNegativePercent),
     ]
 }

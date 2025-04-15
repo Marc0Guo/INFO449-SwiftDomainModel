@@ -26,6 +26,7 @@ public struct Money {
         "EUR": 1.5,
         "CAN": 1.25
     ] // 1 USD = x Money
+    
 
     public init(amount: Int, currency: String) {
         guard Money.validCurrencies.contains(currency) else {
@@ -34,11 +35,8 @@ public struct Money {
         self.amount = amount
         self.currency = currency
     }
-    
+
     public func convert(_ curr: String) -> Money {
-        guard Money.validCurrencies.contains(curr) else {
-            fatalError("Unknown currency: \(curr)")
-        }
         
         let usdAmount = Double(self.amount) * Money.toUSD[self.currency]!
         let actualAmount = usdAmount * Money.fromUSD[curr]!
@@ -50,6 +48,15 @@ public struct Money {
         let selfInUSD = Double(self.amount) * Money.toUSD[self.currency]!
         let otherInUSD = Double(other.amount) * Money.toUSD[other.currency]!
         let totalInUSD = selfInUSD + otherInUSD
+        
+        let resultAmount = totalInUSD * Money.fromUSD[other.currency]!
+        return Money(amount: Int(resultAmount), currency: other.currency)
+    }
+    
+    func subtract(_ other: Money) -> Money {
+        let selfInUSD = Double(self.amount) * Money.toUSD[self.currency]!
+        let otherInUSD = Double(other.amount) * Money.toUSD[other.currency]!
+        let totalInUSD = selfInUSD - otherInUSD
         
         let resultAmount = totalInUSD * Money.fromUSD[other.currency]!
         return Money(amount: Int(resultAmount), currency: other.currency)
@@ -114,6 +121,7 @@ public class Job {
     }
 }
 
+
 ////////////////////////////////////
 // Person
 //
@@ -163,9 +171,8 @@ public class Person {
         } ?? "nil"
 
         let spouseDesc = spouse?.firstName ?? "nil"
-        let fullName = [firstName, lastName].filter { !$0.isEmpty }.joined(separator: " ")
 
-        return "[Person: name:\(fullName) age:\(age) job:\(jobDesc) spouse:\(spouseDesc)]"
+        return "[Person: firstName:\(firstName) lastName:\(lastName) age:\(age) job:\(jobDesc) spouse:\(spouseDesc)]"
     }
 }
 
